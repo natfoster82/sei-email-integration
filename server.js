@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 var db = new PersistentStorage();
 
 app.get('/', function (req, res) {
-    res.render('pages/index', { seiBase: config.SEI_BASE, caveonId: config.SEI_ID });
+    res.render('pages/splash', { seiBase: config.SEI_BASE, caveonId: config.SEI_ID });
 });
 
 app.get('/authorize', function (req, res) {

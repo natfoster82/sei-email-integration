@@ -22,5 +22,10 @@ openssl rsa -in keytmp.pem -out key.pem
 
 4. run app
 ```
-npm run start
+npm run watch
+```
+
+5. Go to page
+```
+https://localhost:8443/
 ```
