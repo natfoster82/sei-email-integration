@@ -6,15 +6,15 @@
     <body class="container">
         <main id="seiEmailIntegration">
             <button id="uploadCSV" type="button">Upload a CSV</button>
-            <form id="examineeList" action="" method="POST">
+            <form action="" method="POST">
                 <table>
-                    <tbody>
+                    <tbody id="examineeList">
                         <tr>
                             <td><input type="email" placeholder="Email"></td>
                             <td>Examinee info goes here</td>
                             <td><button id="removeRow" type="button">X</button></td>
                         </tr>
-                        <tr>
+                        <tr id="lastRow">
                             <td></td>
                             <td></td>
                             <td><button id="addRow" type="button">+</button></td>
@@ -24,6 +24,15 @@
                 <button type="submit">Submit</button>
             </form>
         </main>
+        <div hidden>
+            <table>
+                <tr id="rowClone">
+                    <td><input type="email" placeholder="Email"></td>
+                    <td>Examinee info goes here</td>
+                    <td><button id="removeRow" type="button">X</button></td>
+                </tr>
+            </table>
+        </div>
     </body>
     <script>
         document.addEventListener('DOMContentLoaded', init);
@@ -40,15 +49,18 @@
         }
 
         function addRow(event) {
-            console.log('add row clicked');
+            console.log('add row clicked', event);
+            var row = document.getElementById('rowClone').cloneNode(true);
+            row.removeAttribute('id');
+            document.getElementById('examineeList').insertBefore(row, document.getElementById('lastRow'));
         }
 
         function removeRow(event) {
-            console.log('remove row clicked');
+            console.log('remove row clicked', event);
         }
 
         function uploadCSV(event) {
-            console.log('upload csv clicked');
+            console.log('upload csv clicked', event);
         }
     </script>
 </html>
