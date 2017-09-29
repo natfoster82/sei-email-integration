@@ -35,7 +35,7 @@ app.get('/authorize', function (req, res) {
             var integrationInfo = JSON.parse(body);
             db.set(integrationInfo.exam_id, integrationInfo);
 
-            res.redirect(config.SEI_BASE);
+            res.redirect('pages/integrationSuccess');
         }
     );
 });
