@@ -35,7 +35,7 @@ app.get('/authorize', function (req, res) {
             var integrationInfo = JSON.parse(body);
             db.set(integrationInfo.exam_id, integrationInfo);
 
-            res.redirect('pages/integrationSuccess');
+            res.render('pages/integrationSuccess');
         }
     );
 });

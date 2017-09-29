@@ -4,12 +4,51 @@
         <title>Email Integration</title>
     </head>
     <body class="container">
-        <main>
-            <form action="/send" method="POST">
-                <label for="emails">Enter emails</label>
-                <textarea name="emails"></textarea>
-                <button>Send</button>
+        <main id="seiEmailIntegration">
+            <button id="uploadCSV" type="button">Upload a CSV</button>
+            <form id="examineeList" action="" method="POST">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><input type="email" placeholder="Email"></td>
+                            <td>Examinee info goes here</td>
+                            <td><button id="removeRow" type="button">X</button></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><button id="addRow" type="button">+</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="submit">Submit</button>
             </form>
         </main>
     </body>
+    <script>
+        document.addEventListener('DOMContentLoaded', init);
+
+        function init() {
+            console.log('ready');
+            registerListeners();
+        }
+
+        function registerListeners() {
+            document.getElementById('addRow').addEventListener('click', addRow);
+            document.getElementById('removeRow').addEventListener('click', removeRow);
+            document.getElementById('uploadCSV').addEventListener('click', uploadCSV);
+        }
+
+        function addRow(event) {
+            console.log('add row clicked');
+        }
+
+        function removeRow(event) {
+            console.log('remove row clicked');
+        }
+
+        function uploadCSV(event) {
+            console.log('upload csv clicked');
+        }
+    </script>
 </html>
