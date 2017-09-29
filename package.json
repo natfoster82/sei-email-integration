@@ -1,0 +1,24 @@
+{
+  "name": "sei-email-integration",
+  "version": "0.0.1",
+  "description": "example integation to send one time exam link emails",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "watch": "nodemon ./server.js"
+  },
+  "author": "Evan Anderson <evan.anderson@caveon.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "1.18.2",
+    "ejs": "2.5.7",
+    "express": "4.15.5",
+    "jsonwebtoken": "8.0.1",
+    "q": "1.5.0",
+    "redis": "2.8.0",
+    "request": "2.83.0"
+  },
+  "devDependencies": {
+    "nodemon": "1.12.1"
+  }
+}
