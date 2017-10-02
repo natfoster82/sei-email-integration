@@ -6,13 +6,17 @@
     <body class="container">
         <main id="seiEmailIntegration">
             <button id="uploadCSV" type="button">Upload a CSV</button>
-            <form action="" method="POST">
+            <form method="POST">
                 <table>
                     <tbody id="examineeList">
-                        <tr>
-                            <td><input type="email" placeholder="Email"></td>
-                            <td>Examinee info goes here</td>
-                            <td><button id="removeRow" type="button">X</button></td>
+                        <tr class="row">
+                            <td><input name="emails[]" type="email" required placeholder="Email"></td>
+                            <td>
+                                <% for(var i = 0; i < examineeSchema.length; i++) { %>
+                                    <input name="<%= examineeSchema[i].key %>[]" type="text" <% if (examineeSchema[i].required) { %>required<% } %> placeholder="<%= examineeSchema[i].key %>"><br>
+                                <% } %>
+                            </td>
+                            <td><button class="removeRow" type="button">X</button></td>
                         </tr>
                         <tr id="lastRow">
                             <td></td>
@@ -27,9 +31,13 @@
         <div hidden>
             <table>
                 <tr id="rowClone">
-                    <td><input type="email" placeholder="Email"></td>
-                    <td>Examinee info goes here</td>
-                    <td><button id="removeRow" type="button">X</button></td>
+                    <td><input name="emails[]" type="email" required placeholder="Email"></td>
+                    <td>
+                        <% for(var i = 0; i < examineeSchema.length; i++) { %>
+                            <input name="<%= examineeSchema[i].key %>[]" type="text" <% if (examineeSchema[i].required) { %>required<% } %> placeholder="<%= examineeSchema[i].key %>"><br>
+                        <% } %>
+                    </td>
+                    <td><button class="removeRow" type="button">X</button></td>
                 </tr>
             </table>
         </div>
@@ -44,7 +52,7 @@
 
         function registerListeners() {
             document.getElementById('addRow').addEventListener('click', addRow);
-            document.getElementById('removeRow').addEventListener('click', removeRow);
+            document.querySelector('tr td button.removeRow').addEventListener('click', removeRow);
             document.getElementById('uploadCSV').addEventListener('click', uploadCSV);
         }
 
@@ -52,11 +60,13 @@
             console.log('add row clicked', event);
             var row = document.getElementById('rowClone').cloneNode(true);
             row.removeAttribute('id');
-            document.getElementById('examineeList').insertBefore(row, document.getElementById('lastRow'));
+            var child = document.getElementById('examineeList').insertBefore(row, document.getElementById('lastRow'));
+            child.querySelector('tr td button.removeRow').addEventListener('click', removeRow);
         }
 
         function removeRow(event) {
             console.log('remove row clicked', event);
+            document.getElementById('examineeList').removeChild(event.target.parentElement.parentElement);
         }
 
         function uploadCSV(event) {
