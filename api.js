@@ -1,14 +1,19 @@
 const config = require('./config.json');
-const express = require('express');
-var app = express();
 const request = require('request');
 const jwt = require('jsonwebtoken');
-const qlimit = require('qlimit');
-var PersistentStorage = require('./repository');
 const Q = require('q');
+
+
+// Database
+var PersistentStorage = require('./repository');
+var db = new PersistentStorage();
+
+// Express
+const express = require('express');
+var app = express();
+
+// Mail client
 var mailer = require('express-mailer');
-
-
 mailer.extend(app, {
     from: config.MAIL_USERNAME,
     host: config.MAIL_SERVER,
@@ -21,13 +26,19 @@ mailer.extend(app, {
     }
 });
 
+// Concurrency limiter
+const qlimit = require('qlimit');
 var limit = qlimit(10);
-var db = new PersistentStorage();
 
+
+// API routes
+// splash page
 app.get('/', function (req, res) {
     res.render('pages/splash', { seiBase: config.SEI_BASE, caveonId: config.SEI_ID });
 });
 
+// called when returning from SEI integration page
+// saves integration credentials
 app.get('/authorize', function (req, res) {
     var integrationId = req.query.integration_id;
     if (!integrationId) {
@@ -49,6 +60,8 @@ app.get('/authorize', function (req, res) {
     );
 });
 
+// full page SEI app
+// form for entering emails and examinee info
 app.get('/main', function (req, res) {
     var examId = req.query.exam_id;
     var token = req.query.jwt;
@@ -72,6 +85,7 @@ app.get('/main', function (req, res) {
     });
 });
 
+// save examinee info and kickstart emails
 app.post('/main', function (req, res) {
     var examId = req.query.exam_id;
     var token = req.query.jwt;
@@ -119,6 +133,7 @@ app.post('/main', function (req, res) {
     });
 });
 
+// create delivery and send email links
 function createDeliveryAndEmailLink(email, data) {
     console.log(email, data);
     request(data, function (error, response, body) {
