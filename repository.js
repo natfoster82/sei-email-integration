@@ -1,9 +1,10 @@
 const Q = require('q');
 
 
-var PersistentStorage = function PersistentStorage() {
+var PersistentStorage = function PersistentStorage(tryAgainFn) {
     var redis = require("redis");
     this.client = redis.createClient();
+    this.tryAgainFn = tryAgainFn;
 };
 
 PersistentStorage.prototype.set = function set(key, data) {
@@ -13,11 +14,15 @@ PersistentStorage.prototype.set = function set(key, data) {
 
 PersistentStorage.prototype.get = function get(key) {
     var deferred = Q.defer();
+    var self = this;
     this.client.get(key, function (err, dataAsStr) {
-        if (err && !dataAsStr) {
-            deferred.reject();
+        if (dataAsStr) {
+            deferred.resolve(JSON.parse(dataAsStr));
+        } else {
+            self.tryAgainFn(key).then(function (data) {
+                deferred.resolve(data);
+            });
         }
-        deferred.resolve(JSON.parse(dataAsStr));
     });
     return deferred.promise;
 };

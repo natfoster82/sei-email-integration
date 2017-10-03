@@ -6,7 +6,7 @@ const Q = require('q');
 
 // Database
 var PersistentStorage = require('./repository');
-var db = new PersistentStorage();
+var db = new PersistentStorage(getIntegrationInfo);
 
 // Express
 const express = require('express');
@@ -40,24 +40,15 @@ app.get('/', function (req, res) {
 // called when returning from SEI integration page
 // saves integration credentials
 app.get('/authorize', function (req, res) {
-    var integrationId = req.query.integration_id;
-    if (!integrationId) {
+    var examId = req.query.exam_id;
+    if (!examId) {
         res.sendStatus(400);
     }
 
-    request.get(config.SEI_BASE + '/api/integrations/' + integrationId + '/credentials', 
-        { 'auth': { 'user': config.SEI_ID, 'pass': config.SEI_SECRET } },
-        function (error, response, body) {
-            if (error || response.statusCode >= 400) {
-                res.send(error);
-            }
-
-            var integrationInfo = JSON.parse(body);
-            db.set(integrationInfo.exam_id, integrationInfo);
-
-            res.render('pages/integrationSuccess');
-        }
-    );
+    getIntegrationInfo(examId).then(function (integrationInfo) {
+        db.set(integrationInfo.exam_id, integrationInfo);
+        res.render('pages/integrationSuccess');
+    });
 });
 
 // full page SEI app
@@ -79,7 +70,6 @@ app.get('/main', function (req, res) {
                 res.render('pages/main', { examineeSchema: examineeSchema });
             });
         } catch (e) {
-            console.log(e);
             res.status(500).send(e);
         }
     });
@@ -135,7 +125,6 @@ app.post('/main', function (req, res) {
 
 // create delivery and send email links
 function createDeliveryAndEmailLink(email, data) {
-    console.log(email, data);
     request(data, function (error, response, body) {
         var takeUrl = String(config.TAKE_URL + '?launch_token=' + body.launch_token);
         app.mailer.send('emails/deliveryLink', {
@@ -146,6 +135,22 @@ function createDeliveryAndEmailLink(email, data) {
             console.log('Done');
         });
     });
+}
+
+function getIntegrationInfo(examId) {
+    var deferred = Q.defer();
+    request.get(config.SEI_BASE + '/api/integrations/' + examId + '/credentials', 
+        { 'auth': { 'user': config.SEI_ID, 'pass': config.SEI_SECRET } },
+        function (error, response, body) {
+            if (error || response.statusCode >= 400) {
+                console.log('123', error);
+                deferred.reject(false);
+            }
+
+            deferred.resolve(JSON.parse(body));
+        }
+    );
+    return deferred.promise;
 }
 
 
