@@ -14,7 +14,6 @@ PersistentStorage.prototype.set = function set(key, data) {
 PersistentStorage.prototype.get = function get(key) {
     var deferred = Q.defer();
     this.client.get(key, function (err, dataAsStr) {
-        console.log(err);
         if (err && !dataAsStr) {
             deferred.reject();
         }

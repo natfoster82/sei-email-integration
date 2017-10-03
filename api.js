@@ -1,10 +1,28 @@
 const config = require('./config.json');
 const express = require('express');
-const app = express();
+var app = express();
 const request = require('request');
 const jwt = require('jsonwebtoken');
+const qlimit = require('qlimit');
+var PersistentStorage = require('./repository');
 const Q = require('q');
+var mailer = require('express-mailer');
 
+
+mailer.extend(app, {
+    from: config.MAIL_USERNAME,
+    host: config.MAIL_SERVER,
+    secureConnection: false,
+    port: 587,
+    transportMethod: 'SMTP',
+    auth: {
+        user: config.MAIL_USERNAME,
+        pass: config.MAIL_PASSWORD
+    }
+});
+
+var limit = qlimit(10);
+var db = new PersistentStorage();
 
 app.get('/', function (req, res) {
     res.render('pages/splash', { seiBase: config.SEI_BASE, caveonId: config.SEI_ID });
@@ -48,7 +66,8 @@ app.get('/main', function (req, res) {
                 res.render('pages/main', { examineeSchema: examineeSchema });
             });
         } catch (e) {
-            res.sendStatus(500);
+            console.log(e);
+            res.status(500).send(e);
         }
     });
 });
@@ -64,14 +83,14 @@ app.post('/main', function (req, res) {
     db.get(examId).then(function (integrationInfo) {
         try {
             jwt.verify(token, integrationInfo.secret);
-            var examineeInfos = [];
             var keys = Object.keys(req.body);
-            for (var i = 0; i < req.body.emails.length; i++) {
+            var tasks = [];
+            for (var i = 0; i < req.body.email.length; i++) {
                 var info = {};
                 var email = null;
                 for (var j = 0; j < keys.length; j++) {
                     var currentKey = keys[j];
-                    if (currentKey === 'emails') {
+                    if (currentKey === 'email') {
                         email = req.body[currentKey][i];
                     } else {
                         info[currentKey] = req.body[currentKey][i];
@@ -86,29 +105,30 @@ app.post('/main', function (req, res) {
                     'url': config.SEI_BASE + '/api/exams/' + integrationInfo.exam_id + '/deliveries',
                     'json': { 'examinee_info' : info }
                 };
-                createDelivery(deliveryPostData, email);
-                examineeInfos.push(info);
+                tasks.push([email, deliveryPostData]);
             }
+
+            Q.all(tasks.map(limit(function (tup) {
+                return createDeliveryAndEmailLink(tup[0], tup[1]);
+            })));
+
             res.render('pages/emailSuccess');
         } catch (e) {
-            res.sendStatus(500);
+            res.status(500).send(e);
         }
     });
 });
 
-function createDelivery(deliveryPostData, email) {
-    request(deliveryPostData, function (error, response, body) {
+function createDeliveryAndEmailLink(email, data) {
+    console.log(email, data);
+    request(data, function (error, response, body) {
         var takeUrl = String(config.TAKE_URL + '?launch_token=' + body.launch_token);
         app.mailer.send('emails/deliveryLink', {
             to: email,
             subject: 'New Delivery',
             deliveryLink: takeUrl
-        }, function (err) {
-            if (err) {
-                // handle error 
-                console.log(err);
-            }
-            console.log('Email Sent');
+        }, function () {
+            console.log('Done');
         });
     });
 }
