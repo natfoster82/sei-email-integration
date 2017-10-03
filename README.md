@@ -10,7 +10,11 @@ npm install
 {
     "SEI_ID": "<your-key-here>",
     "SEI_SECRET": "<your-secret-here>",
-    "SEI_BASE": "<env-url>"
+    "SEI_BASE": "<env-url>",
+    "TAKE_URL": "<take-url>",
+    "MAIL_SERVER": "<mail-server-url>",
+    "MAIL_USERNAME": "mail-username",
+    "MAIL_PASSWORD": "<mail-password>"
 }
 ```
 
