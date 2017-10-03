@@ -67,6 +67,13 @@ app.get('/main', function (req, res) {
             { 'auth': { 'bearer': integrationInfo.token } }, function (error, response, body) {
                 var exam = JSON.parse(body);
                 var examineeSchema = exam.settings.examinee_schema;
+                for (var i = 0; i < examineeSchema.length; i++) {
+                    if (examineeSchema[i].key === 'email' ||
+                        examineeSchema[i].key === 'Email') {
+                            examineeSchema.splice(i, 1);
+                            break;
+                    }
+                }
                 res.render('pages/main', { examineeSchema: examineeSchema });
             });
         } catch (e) {
@@ -94,11 +101,7 @@ app.post('/main', function (req, res) {
                 var email = null;
                 for (var j = 0; j < keys.length; j++) {
                     var currentKey = keys[j];
-                    if (currentKey === 'email') {
-                        email = req.body[currentKey][i];
-                    } else {
-                        info[currentKey] = req.body[currentKey][i];
-                    }
+                    info[currentKey] = req.body[currentKey][i];
                 }
                 
                 var deliveryPostData = {
@@ -109,7 +112,7 @@ app.post('/main', function (req, res) {
                     'url': config.SEI_BASE + '/api/exams/' + integrationInfo.exam_id + '/deliveries',
                     'json': { 'examinee_info' : info }
                 };
-                tasks.push([email, deliveryPostData]);
+                tasks.push([info.email, deliveryPostData]);
             }
 
             Q.all(tasks.map(limit(function (tup) {
@@ -143,7 +146,6 @@ function getIntegrationInfo(examId) {
         { 'auth': { 'user': config.SEI_ID, 'pass': config.SEI_SECRET } },
         function (error, response, body) {
             if (error || response.statusCode >= 400) {
-                console.log('123', error);
                 deferred.reject(false);
             }
 
