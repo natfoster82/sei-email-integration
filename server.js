@@ -9,11 +9,12 @@ const express = require('express');
 var app = express();
 
 // App settings
+app.set('port', (process.env.PORT || 8444));
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(require('./api'));
 
-app.listen(8443, function () {
-    console.log('started server on 8443');
+app.listen(app.get('port'), function () {
+    console.log('Node app is running on port', app.get('port'));
 });
