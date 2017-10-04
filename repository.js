@@ -1,9 +1,10 @@
 const Q = require('q');
+const config = require('./config');
 
 
 var PersistentStorage = function PersistentStorage(tryAgainFn) {
     var redis = require("redis");
-    this.client = redis.createClient();
+    this.client = redis.createClient(config.REDIS_URL);
     this.tryAgainFn = tryAgainFn;
 };
 

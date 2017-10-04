@@ -16,7 +16,8 @@ var config = {
     "TAKE_URL": process.env.TAKE_URL,
     "MAIL_SERVER": process.env.MAIL_SERVER,
     "MAIL_USERNAME": process.env.MAIL_USERNAME,
-    "MAIL_PASSWORD": process.env.MAIL_PASSWORD
+    "MAIL_PASSWORD": process.env.MAIL_PASSWORD,
+    "REDIS_URL": process.env.REDIS_URL
 };
 
 module.exports = config;
