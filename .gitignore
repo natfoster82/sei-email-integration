@@ -3,3 +3,4 @@ cert.pem
 key.pem
 keytmp.pem
 config.json
+.idea/

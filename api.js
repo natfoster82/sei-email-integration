@@ -1,4 +1,4 @@
-const config = require('./config.json');
+const config = require('./config');
 const request = require('request');
 const jwt = require('jsonwebtoken');
 const Q = require('q');
@@ -40,12 +40,12 @@ app.get('/', function (req, res) {
 // called when returning from SEI integration page
 // saves integration credentials
 app.get('/authorize', function (req, res) {
-    var examId = req.query.exam_id;
-    if (!examId) {
+    var confirmToken = req.query.confirm_token;
+    if (!confirmToken) {
         res.sendStatus(400);
     }
 
-    getIntegrationInfo(examId).then(function (integrationInfo) {
+    confirmIntegration(confirmToken).then(function (integrationInfo) {
         db.set(integrationInfo.exam_id, integrationInfo);
         res.render('pages/integrationSuccess');
     });
@@ -139,6 +139,23 @@ function createDeliveryAndEmailLink(email, data) {
         });
     });
 }
+
+
+function confirmIntegration(confirmToken) {
+    var deferred = Q.defer();
+    request.get(config.SEI_BASE + '/api/integrations/confirm/' + confirmToken,
+        { 'auth': { 'user': config.SEI_ID, 'pass': config.SEI_SECRET } },
+        function (error, response, body) {
+            if (error || response.statusCode >= 400) {
+                deferred.reject(false);
+            }
+
+            deferred.resolve(JSON.parse(body));
+        }
+    );
+    return deferred.promise;
+}
+
 
 function getIntegrationInfo(examId) {
     var deferred = Q.defer();
