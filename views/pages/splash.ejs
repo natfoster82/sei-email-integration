@@ -3,9 +3,26 @@
     <head>
         <title>Email Integration</title>
     </head>
+    <style>
+        html, body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #eee;
+        }
+        
+        section {
+            width: 98%;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 10px;
+            padding: 10px 50px 30px;
+            box-sizing: border-box;
+        }
+    </style>
     <body class="container">
-        <main>
-            <a href="<%= seiBase %>/integrate?caveon_id=<%= caveonId %>">Integrate</a>
-        </main>
+        <section>
+                <h1>Email Integration for SEI</h1>
+            <p>Quickly create new deliveries and send out delivery links to the candidates in bulk.</p>
+            <a href="//<%= seiBase %>/integrate?caveon_id=<%= caveonId %>">Integrate</a>
+    </section>
     </body>
 </html>
