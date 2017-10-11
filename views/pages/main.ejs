@@ -3,9 +3,115 @@
     <head>
         <title>Email Integration</title>
     </head>
+    <style>
+        #seiEmailIntegration {
+            font-size: 1.2em;
+        }
+        #seiEmailIntegration p {
+            font-family: Arial, Helvetica, sans-serif; font-size: 13px;
+        }
+        #seiEmailIntegration table, 
+        #seiEmailIntegration tr, 
+        #seiEmailIntegration td, 
+        #seiEmailIntegration tbody, 
+        #seiEmailIntegration thead, 
+        #seiEmailIntegration th {
+            border: none; border-collapse: inherit; border-spacing: 0;
+            vertical-align: top;
+            text-align: left;
+            font-weight: inherit;
+            -webkit-border-horizontal-spacing: 0;
+            -webkit-border-vertical-spacing: 0;
+        }
+        #seiEmailIntegration table {
+            width: 100%;
+            }
+        #seiEmailIntegration tr td:nth-child(3) {
+            width: 20%;
+        }
+        #seiEmailIntegration table td {
+            padding: 5px;
+        }
+        #seiEmailIntegration #lastRow button {
+            float:right;
+        }
+        #seiEmailIntegration table td:nth-child(1) {
+            width: 40%;
+        }
+        #seiEmailIntegration table td button {
+            float: right;
+            background: transparent;
+        }
+        #seiEmailIntegration tr:nth-child(odd){
+            background: #eee;
+        }
+        #seiEmailIntegration tr:last-child {
+            background: #fff;
+        }
+        #seiEmailIntegration input[type="text"],
+        #seiEmailIntegration input[type="email"] {
+            font-size: 16px;
+            padding: 5px;
+            border:1px solid transparent; 
+            width: 90%;
+            background: transparent;
+            transition: all .25s;
+        }
+        #seiEmailIntegration button[type="submit"] {
+            background: #be1515;
+            color: #ffffff;
+            border-radius: 3px;
+            padding: 5px 25px;
+            font-size: 16px;
+            margin-top: 30px;
+            cursor: pointer;
+        }
+        #seiEmailIntegration button[type="submit"]:hover {
+            background:#A01010;
+        }
+        #seiEmailIntegration input:focus[type="text"],
+        #seiEmailIntegration input:hover[type="text"],
+        #seiEmailIntegration input:focus[type="email"],
+        #seiEmailIntegration input:hover[type="email"] {
+            background: #fff;
+            outline:none;
+            border:1px solid #ccc;
+        }
+        #seiEmailIntegration button {
+            border:none;
+            font-size: 16px;
+        }
+        #seiEmailIntegration button#addRow  {
+            background: #333;
+            color: #fff;
+            padding: 5px 15px;
+            border:none;
+            border-radius: 3px;
+            font-size: 13px;
+            float:right;
+            cursor: pointer;
+        }
+        ::-webkit-input-placeholder { 
+        color: #666;
+        font-size: 12px;
+        font-style: italic;
+        }
+        ::-moz-placeholder { 
+        color: #ccc;
+        }
+        :-ms-input-placeholder { 
+        color: #ccc;
+        }
+        :-moz-placeholder { 
+        color: #ccc;
+        }
+    </style>
+
     <body class="container">
         <main id="seiEmailIntegration">
-            <input id="uploadCSV" type="file">
+            <p>
+                Upload a .csv:<br> <input id="uploadCSV" type="file">
+            </p>
             <form method="POST">
                 <table>
                     <tbody id="examineeList">
@@ -21,11 +127,13 @@
                         <tr id="lastRow">
                             <td></td>
                             <td></td>
-                            <td><button id="addRow" type="button">+</button></td>
+                            <td><button id="addRow" type="button">+ Add</button></td>
                         </tr>
                     </tbody>
                 </table>
+                <p>Submit this form to send delivery links to the email adresses listed above.<br>
                 <button type="submit">Submit</button>
+            </p>
             </form>
         </main>
         <div hidden>
