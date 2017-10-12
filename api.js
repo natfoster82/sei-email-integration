@@ -74,7 +74,7 @@ app.get('/main', function (req, res) {
                             break;
                     }
                 }
-                res.render('pages/main', { examineeSchema: examineeSchema });
+                res.render('pages/main', { examineeSchema: examineeSchema, examName: exam.name });
             });
         } catch (e) {
             res.status(500).send(e);
@@ -114,9 +114,8 @@ app.post('/main', function (req, res) {
                 };
                 tasks.push([info.email, deliveryPostData]);
             }
-
             Q.all(tasks.map(limit(function (tup) {
-                return createDeliveryAndEmailLink(tup[0], tup[1]);
+                return createDeliveryAndEmailLink(tup[0], tup[1], req.body.examName);
             })));
 
             res.render('pages/emailSuccess');
@@ -127,13 +126,14 @@ app.post('/main', function (req, res) {
 });
 
 // create delivery and send email links
-function createDeliveryAndEmailLink(email, data) {
+function createDeliveryAndEmailLink(email, data, examName) {
     request(data, function (error, response, body) {
         var takeUrl = String(config.TAKE_URL + '?launch_token=' + body.launch_token);
         app.mailer.send('emails/deliveryLink', {
             to: email,
-            subject: 'New Delivery',
-            deliveryLink: takeUrl
+            subject: examName + ': Launch Exam',
+            deliveryLink: takeUrl,
+            examName: examName
         }, function () {
             console.log('Done');
         });

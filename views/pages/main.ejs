@@ -113,6 +113,7 @@
                 Upload a .csv:<br> <input id="uploadCSV" type="file">
             </p>
             <form method="POST">
+                <input name="examName" type="hidden" value="<%= examName %>">
                 <table>
                     <tbody id="examineeList">
                         <tr class="row">
