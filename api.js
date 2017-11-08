@@ -66,15 +66,17 @@ app.get('/main', function (req, res) {
             request.get(config.SEI_BASE + '/api/exams/' + integrationInfo.exam_id + '?include=settings',
             { 'auth': { 'bearer': integrationInfo.token } }, function (error, response, body) {
                 var exam = JSON.parse(body);
+                var emailKey = undefined;
                 var examineeSchema = exam.settings.examinee_schema;
                 for (var i = 0; i < examineeSchema.length; i++) {
                     if (examineeSchema[i].key === 'email' ||
                         examineeSchema[i].key === 'Email') {
+                            emailKey = examineeSchema[i].key;
                             examineeSchema.splice(i, 1);
                             break;
                     }
                 }
-                res.render('pages/main', { examineeSchema: examineeSchema, examName: exam.name });
+                res.render('pages/main', { examineeSchema: examineeSchema, examName: exam.name, emailKey: emailKey });
             });
         } catch (e) {
             res.status(500).send(e);
@@ -98,12 +100,15 @@ app.post('/main', function (req, res) {
             var tasks = [];
             for (var i = 0; i < req.body.email.length; i++) {
                 var info = {};
-                var email = null;
                 for (var j = 0; j < keys.length; j++) {
                     var currentKey = keys[j];
-                    info[currentKey] = req.body[currentKey][i];
+                    if (currentKey === 'email') {
+                        info[req.body.emailKey] = req.body[currentKey][i];
+                    } else {
+                        info[currentKey] = req.body[currentKey][i];
+                    }
                 }
-                
+
                 var deliveryPostData = {
                     'method': 'POST',
                     'headers': {
