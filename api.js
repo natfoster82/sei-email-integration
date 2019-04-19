@@ -136,7 +136,7 @@ function createDeliveryAndEmailLink(email, data, examName, examDescription) {
         var takeUrl = String(config.TAKE_URL + '?launch_token=' + body.launch_token);
         app.mailer.send('emails/deliveryLink', {
             to: email,
-            subject: examName + ': Launch Exam',
+            subject: 'You\'ve been invited to take an exam - ' + examName,
             deliveryLink: takeUrl,
             examName: examName,
             examDescription: examDescription
