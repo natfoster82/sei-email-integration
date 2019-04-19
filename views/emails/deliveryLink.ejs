@@ -1,31 +1,11 @@
-<!doctype html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Exam Link</title>
-  </head>
-  <body class="" style="background-color: #f6f6f6; font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
-    <table border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #f6f6f6;">
-      <tr>
-        <td style="max-width: 5px; padding: 5px; width: 5px;">
-            &nbsp;
-        </td>
-        <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; Margin: 0 auto; max-width: 580px; padding: 10px; width: 680px;">
-          <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
-            <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">
-              <%= examName %> - Launch Exam</span>
-            <p style="font-family: sans-serif; font-size: 16px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
-              <%= examName %>
-            </p>
-            <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Follow this link to launch the exam:</p>
-            <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;"><%= deliveryLink %></p>
-          </div>
-        </td>
-        <td style="max-width: 5px; padding: 10px; width: 5px;">
-            &nbsp;
-        </td>
-      </tr>
-    </table>
-  </body>
-</html>
+<a href="<%= deliveryLink %>"><img
+            class="max-width" border="0"
+            style="display:block;color:#000000;text-decoration:none;font-family:Helvetica, arial, sans-serif;font-size:16px;"
+            width="230" height="40" src="https://sei-prod.s3.amazonaws.com/static/splash/images/sei-splashlogo.png"
+            alt="SEI - Secure Exam Interface"></a>
+<p>You&#39;ve been invited to take an exam:</p>
+<h2><%= examName %></h2>
+<div><%= examDescription %></div>
+<a href="<%= deliveryLink %>"
+   style="background-color:#333333;border:1px solid #333333;border-color:#333333;border-radius:6px;border-width:1px;color:#ffffff;display:inline-block;font-family:arial,helvetica,sans-serif;font-size:16px;font-weight:normal;letter-spacing:0px;line-height:16px;padding:12px 18px 12px 18px;text-align:center;text-decoration:none"
+   target="_blank">Take the exam</a>

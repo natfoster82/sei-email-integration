@@ -76,7 +76,7 @@ app.get('/main', function (req, res) {
                             break;
                     }
                 }
-                res.render('pages/main', { examineeSchema: examineeSchema, examName: exam.name, emailKey: emailKey });
+                res.render('pages/main', { examineeSchema: examineeSchema, examName: exam.name, emailKey: emailKey, examDescription: exam.settings.description });
             });
         } catch (e) {
             res.status(500).send(e);
@@ -117,10 +117,10 @@ app.post('/main', function (req, res) {
                     'url': config.SEI_BASE + '/api/exams/' + integrationInfo.exam_id + '/deliveries',
                     'json': { 'examinee_info' : info }
                 };
-                tasks.push([info.email, deliveryPostData]);
+                tasks.push([info[req.body.emailKey], deliveryPostData]);
             }
             Q.all(tasks.map(limit(function (tup) {
-                return createDeliveryAndEmailLink(tup[0], tup[1], req.body.examName);
+                return createDeliveryAndEmailLink(tup[0], tup[1], req.body.examName, req.body.examDescription);
             })));
 
             res.render('pages/emailSuccess');
@@ -131,14 +131,15 @@ app.post('/main', function (req, res) {
 });
 
 // create delivery and send email links
-function createDeliveryAndEmailLink(email, data, examName) {
+function createDeliveryAndEmailLink(email, data, examName, examDescription) {
     request(data, function (error, response, body) {
         var takeUrl = String(config.TAKE_URL + '?launch_token=' + body.launch_token);
         app.mailer.send('emails/deliveryLink', {
             to: email,
             subject: examName + ': Launch Exam',
             deliveryLink: takeUrl,
-            examName: examName
+            examName: examName,
+            examDescription: examDescription
         }, function () {
             console.log('Done');
         });
